@@ -1,36 +1,30 @@
 const express = require('express');
 const router = express.Router();
 
-// GET /tasks  → return list of 5 tasks
+// Example in-memory tasks array
+let tasks = [
+    { id: 1, title: "Task 1", completed: false, priority: "low", createdAt: new Date() },
+    { id: 2, title: "Task 2", completed: true, priority: "medium", createdAt: new Date() },
+    { id: 3, title: "Task 3", completed: false, priority: "high", createdAt: new Date() },
+    { id: 4, title: "Task 4", completed: true, priority: "low", createdAt: new Date() },
+    { id: 5, title: "Task 5", completed: false, priority: "medium", createdAt: new Date() }
+];
+
+// GET all tasks
 router.get('/', (req, res) => {
-  const tasks = req.app.locals.tasks;
-  res.status(200).json({
-    success: true,
-    data: tasks
-  });
+    res.json(tasks);
 });
 
-// GET /tasks/:id → get one task
-router.get('/:id', (req, res) => {
-  const inputId = req.params.id;
+// GET task by ID
+router.get('/task/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const task = tasks.find(t => t.id === id);
 
-  // Validate numeric id
-  const idNum = Number(inputId);
-  if (!Number.isInteger(idNum) || idNum <= 0) {
-    return res.status(400).json({ error: "Invalid ID format" });
-  }
+    if (!task) {
+        return res.status(404).json({ error: "Task not found" });
+    }
 
-  const tasks = req.app.locals.tasks;
-  const task = tasks.find(t => t.id === idNum);
-
-  if (!task) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  res.status(200).json({
-    success: true,
-    data: task
-  });
+    res.json(task);
 });
 
 module.exports = router;
