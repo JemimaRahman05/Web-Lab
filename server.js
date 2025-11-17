@@ -1,7 +1,5 @@
 const express = require('express');
 const tasksRouter = require('./src/routes/tasks');
- // make sure path is correct
-
 const app = express();
 const PORT = 3000;
 
